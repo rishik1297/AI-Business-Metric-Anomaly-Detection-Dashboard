@@ -9,6 +9,7 @@ from src.ai_summary import (
     build_anomaly_payload,
     build_overall_payload,
     generate_overall_summary,
+    get_secret,
 )
 
 
@@ -59,6 +60,10 @@ class AISummaryTests(unittest.TestCase):
         with patch.dict(os.environ, {}, clear=True):
             with self.assertRaisesRegex(AISummaryError, "GROQ_API_KEY"):
                 generate_overall_summary({"anomalies": []})
+
+    def test_get_secret_reads_environment(self):
+        with patch.dict(os.environ, {"GROQ_API_KEY": "abc123"}, clear=True):
+            self.assertEqual(get_secret("GROQ_API_KEY"), "abc123")
 
 
 if __name__ == "__main__":

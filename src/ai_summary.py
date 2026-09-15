@@ -5,8 +5,29 @@ import os
 from typing import Any
 
 import pandas as pd
+from dotenv import load_dotenv
 
 from .ai_explainer import _metric_metadata
+
+load_dotenv()
+
+
+def get_secret(name: str, default: str | None = None) -> str | None:
+    """Read a config value from the environment, .env file, or Streamlit secrets."""
+    value = os.getenv(name)
+    if value is not None and value.strip():
+        return value.strip()
+
+    try:
+        import streamlit as st
+
+        secrets_value = st.secrets.get(name)
+        if secrets_value is not None and str(secrets_value).strip():
+            return str(secrets_value).strip()
+    except Exception:
+        pass
+
+    return default
 
 
 DEFAULT_MODEL = "openai/gpt-oss-120b"
@@ -81,7 +102,7 @@ def build_overall_payload(
 
 
 def _request_summary(instruction: str, payload: dict[str, Any]) -> str:
-    api_key = os.getenv("GROQ_API_KEY")
+    api_key = get_secret("GROQ_API_KEY")
     if not api_key:
         raise AISummaryError("GROQ_API_KEY is not configured.")
 
@@ -97,9 +118,10 @@ def _request_summary(instruction: str, payload: dict[str, Any]) -> str:
         f"<metrics>{json.dumps(payload, default=str)}</metrics>"
     )
     try:
+        model_name = get_secret("GROQ_MODEL", DEFAULT_MODEL)
         client = Groq(api_key=api_key)
         completion = client.chat.completions.create(
-            model=os.getenv("GROQ_MODEL", DEFAULT_MODEL),
+            model=model_name,
             messages=[
                 {
                     "role": "system",
