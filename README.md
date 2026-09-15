@@ -4,6 +4,10 @@
 
 This project is an AI-assisted business analytics dashboard that detects unusual patterns in business metrics, explains the likely drivers of each anomaly, stores observations and alert history in SQLite, and presents the results through Streamlit.
 
+> Security note: Keep `.env` files local because they may contain API keys or credentials. Do not expose their contents. Keep `.venv` local as well; it is the Python virtual environment and should not be included in a portfolio project.
+
+This repository is structured for clean GitHub publication with local-only secrets, generated artifacts excluded from source control, and a reproducible setup flow for collaborators or recruiters reviewing the project.
+
 The application is designed for analysts who need to move from raw Excel reports to actionable business insight without manually reviewing every row.
 
 ## Business Problem
@@ -323,6 +327,21 @@ Open PowerShell in the project folder:
 ```powershell
 cd "D:\analysis project\ai analysis"
 ```
+
+Create a local Python virtual environment. Keep this folder out of git and GitHub:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+Configure environment variables locally without committing secrets. Copy the example file and fill in your own values:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+The `.env` file is intentionally local-only. Never commit it or share its contents publicly. The included `.env.example` is safe for version control because it contains template placeholders only.
 
 Create a virtual environment:
 

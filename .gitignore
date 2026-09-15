@@ -1,3 +1,21 @@
+# Local environment secrets and credentials
 .env
+.env.*
+!.env.example
+
+# Python virtual environments and local tooling
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Local app/runtime artifacts
+.streamlit_uploaded_metrics/
 reports/*.db
 reports/powerbi/*.csv
+.vscode/
+.DS_Store
